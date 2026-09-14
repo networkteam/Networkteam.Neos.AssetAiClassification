@@ -1,0 +1,29 @@
+.asset-ai-classification {
+    display: inline-flex;
+    gap: 0;
+}
+
+.neos.media-browser .neos-image-inputs .asset-ai-classification > .neos-button {
+    margin-right: 0;
+}
+
+.asset-ai-classification > input[type="radio"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.asset-ai-classification > input[type="radio"]:checked + .neos-button {
+    color: #fff;
+    background-color: #00adee;
+    z-index: 2;
+}
+
+.asset-ai-classification > input[type="radio"]:focus + .neos-button {
+    outline: 1px dotted #fff;
+    outline-offset: -2px;
+}

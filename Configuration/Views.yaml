@@ -1,0 +1,23 @@
+# Add AI classification fields to the Neos 8.3 asset edit template.
+
+-
+  requestFilter: 'isPackage("Neos.Media.Browser") && (isController("Asset") || isController("Image")) && isAction("edit") && isFormat("html")'
+  options:
+    layoutRootPaths:
+      'Neos.Media.Browser': 'resource://Neos.Media.Browser/Private/Layouts'
+    templatePathAndFilename: 'resource://Networkteam.Neos.AssetAiClassification/Private/Templates/Asset/Edit.html'
+    partialRootPaths:
+      'Neos.Neos': 'resource://Neos.Neos/Private/Partials'
+      'Neos.Media.Browser': 'resource://Neos.Media.Browser/Private/Partials'
+      'Networkteam.Neos.AssetAiClassification': 'resource://Networkteam.Neos.AssetAiClassification/Private/Partials'
+
+-
+  requestFilter: 'parentRequest.isPackage("Neos.Neos") && isPackage("Neos.Media.Browser") && (isController("Asset") || isController("Image")) && isAction("edit") && isFormat("html")'
+  options:
+    layoutRootPaths:
+      'Neos.Media.Browser': 'resource://Neos.Media.Browser/Private/Layouts/Module'
+    templatePathAndFilename: 'resource://Networkteam.Neos.AssetAiClassification/Private/Templates/Asset/Edit.html'
+    partialRootPaths:
+      'Neos.Neos': 'resource://Neos.Neos/Private/Partials'
+      'Neos.Media.Browser': 'resource://Neos.Media.Browser/Private/Partials'
+      'Networkteam.Neos.AssetAiClassification': 'resource://Networkteam.Neos.AssetAiClassification/Private/Partials'

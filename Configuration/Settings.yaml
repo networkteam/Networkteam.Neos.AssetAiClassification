@@ -1,0 +1,16 @@
+Neos:
+  Fusion:
+    defaultContext:
+      'AssetAiClassification': 'Networkteam\Neos\AssetAiClassification\EelHelper\AssetAiClassificationHelper'
+  Media:
+    Browser:
+      styles:
+        100: 'resource://Networkteam.Neos.AssetAiClassification/Public/Styles/AssetAiClassification.css'
+  Neos:
+    modules:
+      management:
+        submodules:
+          media:
+            additionalResources:
+              styleSheets:
+                100: 'resource://Networkteam.Neos.AssetAiClassification/Public/Styles/AssetAiClassification.css'

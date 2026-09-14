@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="Build/BuildEssentials/PhpUnit/UnitTestBootstrap.php"
+         colors="true"
+         cacheResultFile=".phpunit.result.cache"
+         convertDeprecationsToExceptions="true">
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>Tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

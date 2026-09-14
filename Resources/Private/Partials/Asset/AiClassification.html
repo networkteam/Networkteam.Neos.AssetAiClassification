@@ -1,0 +1,21 @@
+{namespace neos=Neos\Neos\ViewHelpers}
+{namespace ai=Networkteam\Neos\AssetAiClassification\ViewHelpers}
+<f:if condition="{assetProxy.assetSource.identifier} == 'neos'">
+    <f:alias map="{classification: '{ai:classification(asset: assetProxy.asset)}'}">
+        <label id="asset-ai-classification-label">{neos:backend.translate(id: 'classification.label', package: 'Networkteam.Neos.AssetAiClassification')}</label>
+        <div class="neos-button-group asset-ai-classification" role="radiogroup" aria-labelledby="asset-ai-classification-label">
+            <f:form.radio name="assetAiClassification" id="asset-ai-classification-none" value="none" checked="{classification} == 'none'" />
+            <label class="neos-button" for="asset-ai-classification-none">
+                {neos:backend.translate(id: 'classification.none', package: 'Networkteam.Neos.AssetAiClassification')}
+            </label>
+            <f:form.radio name="assetAiClassification" id="asset-ai-classification-generated" value="generated" checked="{classification} == 'generated'" />
+            <label class="neos-button" for="asset-ai-classification-generated">
+                {neos:backend.translate(id: 'classification.generated', package: 'Networkteam.Neos.AssetAiClassification')}
+            </label>
+            <f:form.radio name="assetAiClassification" id="asset-ai-classification-modified" value="modified" checked="{classification} == 'modified'" />
+            <label class="neos-button" for="asset-ai-classification-modified">
+                {neos:backend.translate(id: 'classification.modified', package: 'Networkteam.Neos.AssetAiClassification')}
+            </label>
+        </div>
+    </f:alias>
+</f:if>

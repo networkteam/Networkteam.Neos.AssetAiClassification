@@ -1,0 +1,5 @@
+/Build/
+/Packages/
+/bin/
+/vendor/
+.phpunit.result.cache

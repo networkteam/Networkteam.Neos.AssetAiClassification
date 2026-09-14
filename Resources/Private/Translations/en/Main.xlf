@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2">
+    <file original="" product-name="Networkteam.Neos.AssetAiClassification" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="classification.label">
+                <source>AI classification</source>
+            </trans-unit>
+            <trans-unit id="classification.none">
+                <source>Without AI</source>
+            </trans-unit>
+            <trans-unit id="classification.generated">
+                <source>AI generated</source>
+            </trans-unit>
+            <trans-unit id="classification.modified">
+                <source>AI modified</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
