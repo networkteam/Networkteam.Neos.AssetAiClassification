@@ -53,7 +53,7 @@ class AssetAiClassificationService
     private array $classificationCache = [];
 
     /**
-     * The classification record of an asset, null if it is not classified. Always hits the database.
+     * The classification record of an asset, including pending inserts, null if it is not classified.
      */
     public function get(?AssetInterface $asset): ?AssetAiClassification
     {
