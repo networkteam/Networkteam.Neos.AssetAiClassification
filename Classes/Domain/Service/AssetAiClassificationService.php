@@ -18,7 +18,7 @@ use Networkteam\Neos\AssetAiClassification\Domain\Repository\AssetAiClassificati
 /**
  * Central access to the AI classification of assets.
  *
- * Reading accepts any asset, image variants are resolved to their original asset.
+ * Image variants are resolved to their original asset for both reading and writing.
  *
  * @Flow\Scope("singleton")
  */
@@ -103,6 +103,11 @@ class AssetAiClassificationService
      */
     public function setClassification(Asset $asset, string $classification, bool $emitAssetUpdated = true): void
     {
+        $asset = $this->resolveOriginalAsset($asset);
+        if ($asset === null) {
+            return;
+        }
+
         $existingClassification = $this->get($asset);
 
         if ($existingClassification === null) {

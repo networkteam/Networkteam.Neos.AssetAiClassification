@@ -132,6 +132,77 @@ class AssetAiClassificationServiceTest extends UnitTestCase
     /**
      * @test
      */
+    public function settingClassificationThroughAVariantStoresAndUpdatesTheOriginalAsset(): void
+    {
+        $asset = $this->createMock(Asset::class);
+        $variant = $this->createMock(ImageVariant::class);
+        $variant->method('getOriginalAsset')->willReturn($asset);
+        $storedClassification = null;
+        $repository = $this->createMock(AssetAiClassificationRepository::class);
+        $repository->method('findOneByAsset')->willReturnCallback(
+            static function (Asset $queriedAsset) use (&$storedClassification): ?AssetAiClassification {
+                return $storedClassification !== null && $storedClassification->getAsset() === $queriedAsset
+                    ? $storedClassification
+                    : null;
+            }
+        );
+        $repository->expects(self::once())->method('add')->willReturnCallback(
+            static function (AssetAiClassification $classification) use (&$storedClassification, $asset): void {
+                self::assertSame($asset, $classification->getAsset());
+                $storedClassification = $classification;
+            }
+        );
+        $repository->expects(self::once())->method('update')->with(self::callback(
+            static fn (AssetAiClassification $classification): bool =>
+                $classification->getAsset() === $asset && $classification->isAiModified()
+        ));
+        $assetService = $this->createMock(AssetService::class);
+        $assetService->expects(self::exactly(2))->method('emitAssetUpdated')->with($asset);
+        $persistenceManager = $this->createMock(PersistenceManagerInterface::class);
+        $persistenceManager->method('getIdentifierByObject')->willReturnCallback(
+            static fn (Asset $object): string => $object === $asset ? 'original' : 'variant'
+        );
+        $service = $this->createService($repository, $assetService);
+        $this->inject($service, 'persistenceManager', $persistenceManager);
+
+        // Prime the original's cache before saving through the inline image editor.
+        self::assertSame(AssetAiClassification::WITHOUT_AI, $service->getClassification($asset));
+        $service->setClassification($variant, AssetAiClassification::AI_GENERATED);
+        self::assertSame(AssetAiClassification::AI_GENERATED, $service->getClassification($variant));
+
+        $service->setClassification($variant, AssetAiClassification::AI_MODIFIED);
+        self::assertSame(AssetAiClassification::AI_MODIFIED, $service->getClassification($asset));
+        self::assertSame($storedClassification, $service->get($variant));
+    }
+
+    /**
+     * @test
+     */
+    public function resettingClassificationThroughAVariantRemovesTheOriginalRecordAndClearsItsCachedValue(): void
+    {
+        $asset = $this->createMock(Asset::class);
+        $variant = $this->createMock(ImageVariant::class);
+        $variant->method('getOriginalAsset')->willReturn($asset);
+        $classification = new AssetAiClassification($asset, AssetAiClassification::AI_GENERATED);
+        $repository = $this->createMock(AssetAiClassificationRepository::class);
+        $repository->method('findOneByAsset')->with($asset)->willReturn($classification);
+        $repository->expects(self::once())->method('remove')->with($classification);
+        $repository->expects(self::never())->method('add');
+        $persistenceManager = $this->createMock(PersistenceManagerInterface::class);
+        $persistenceManager->method('getIdentifierByObject')->willReturnCallback(
+            static fn (Asset $object): string => $object === $asset ? 'original' : 'variant'
+        );
+        $service = $this->createService($repository);
+        $this->inject($service, 'persistenceManager', $persistenceManager);
+
+        self::assertSame(AssetAiClassification::AI_GENERATED, $service->getClassification($asset));
+        $service->setClassification($variant, AssetAiClassification::WITHOUT_AI);
+        self::assertSame(AssetAiClassification::WITHOUT_AI, $service->getClassification($variant));
+    }
+
+    /**
+     * @test
+     */
     public function setClassificationDoesNotCreateARecordForWithoutAi(): void
     {
         $asset = $this->createMock(Asset::class);
