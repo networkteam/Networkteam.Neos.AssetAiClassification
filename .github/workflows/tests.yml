@@ -7,13 +7,26 @@ on:
 
 jobs:
   unit-tests:
-    name: PHP ${{ matrix.php-version }}
+    name: Neos ${{ matrix.neos-version }}, PHP ${{ matrix.php-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        # The committed lock file resolves Neos 8.4, which requires PHP >= 8.2
-        php-version: ['8.2', '8.3']
+        include:
+          # Keeps the Neos 8 jobs on the PHPUnit version Neos 8 projects use
+          - neos-version: '8.4'
+            php-version: '8.2'
+            dev-constraints: '--with neos/buildessentials:~8.3.0 --with phpunit/phpunit:~9.6'
+          - neos-version: '8.4'
+            php-version: '8.3'
+            dev-constraints: '--with neos/buildessentials:~8.3.0 --with phpunit/phpunit:~9.6'
+          # Neos 9 needs a package providing neos/contentrepositoryregistry-storageclient to be installable
+          - neos-version: '9.2'
+            php-version: '8.2'
+            additional-packages: 'neos/contentgraph-doctrinedbaladapter:~9.2.0'
+          - neos-version: '9.2'
+            php-version: '8.4'
+            additional-packages: 'neos/contentgraph-doctrinedbaladapter:~9.2.0'
     steps:
       - uses: actions/checkout@v4
 
@@ -24,6 +37,13 @@ jobs:
 
       - run: composer validate --strict
 
-      - run: composer install --prefer-dist --no-progress --no-interaction
+      - run: >
+          composer require --no-update --no-interaction
+          neos/neos:~${{ matrix.neos-version }}.0
+          neos/media-browser:~${{ matrix.neos-version }}.0
+          neos/fusion:~${{ matrix.neos-version }}.0
+          ${{ matrix.additional-packages }}
+
+      - run: composer update --prefer-dist --no-progress --no-interaction ${{ matrix.dev-constraints }}
 
       - run: bin/phpunit

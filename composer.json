@@ -15,8 +15,8 @@
     "neos/fusion": "^8.3 || ^9.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~9.1",
-    "neos/buildessentials": "~8.3.0",
+    "phpunit/phpunit": "~9.1 || ~11.5",
+    "neos/buildessentials": "~8.3.0 || ~9.0",
     "mikey179/vfsstream": "~1.6"
   },
   "autoload": {
