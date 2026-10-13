@@ -20,10 +20,7 @@ jobs:
           - neos-version: '8.4'
             php-version: '8.3'
             dev-constraints: '--with neos/buildessentials:~8.3.0 --with phpunit/phpunit:~9.6'
-          # Neos 9 needs a package providing neos/contentrepositoryregistry-storageclient to be installable
-          - neos-version: '9.2'
-            php-version: '8.2'
-            additional-packages: 'neos/contentgraph-doctrinedbaladapter:~9.2.0'
+          # Neos 9.2 requires PHP 8.4 and a package providing neos/contentrepositoryregistry-storageclient
           - neos-version: '9.2'
             php-version: '8.4'
             additional-packages: 'neos/contentgraph-doctrinedbaladapter:~9.2.0'
