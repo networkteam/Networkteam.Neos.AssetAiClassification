@@ -47,6 +47,10 @@ pass `false` as third argument to suppress it.
 ## Supporting a new Neos version
 
 `Resources/Private/Templates/Asset/Edit.html` is a copy of the Media Browser template and differs from it by a
-single `f:render` line. Diff it against the upstream template of the new Neos version and re-apply that line.
-That copy is what ties the package to a Neos version, not the PHP code — the `neos/*` constraints in
-`composer.json` have to match the Neos version the template was copied from.
+single `f:render` line. That copy is what ties the package to a Neos version, not the PHP code. The Media Browser
+template is the same in Neos 8.4 and 9.2, so one copy serves both.
+
+The CI workflow checks this for every Neos version in its matrix: it diffs the copy, minus the `f:render` line,
+against the installed upstream template. To support a new Neos version, add it to the matrix and widen the
+`neos/*` constraints in `composer.json`. If the template check fails, the upstream template has changed and a
+single copy can no longer serve all supported versions.

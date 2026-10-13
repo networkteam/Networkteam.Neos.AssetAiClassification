@@ -2,10 +2,10 @@
 
 namespace Networkteam\Neos\AssetAiClassification\Tests\Unit\Domain\Repository;
 
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\Mapping\Driver\StaticPHPDriver;
 use Neos\Flow\Persistence\Aspect\PersistenceMagicInterface;
 use Neos\Flow\Persistence\Doctrine\PersistenceManager;
@@ -28,7 +28,11 @@ class AssetAiClassificationRepositoryTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $configuration = Setup::createConfiguration(true);
+        // Built by hand: Doctrine's setup helpers require a cache library that Neos 9 does not install
+        $configuration = new Configuration();
+        $configuration->setProxyDir(sys_get_temp_dir());
+        $configuration->setProxyNamespace('Networkteam\Neos\AssetAiClassification\Tests\Proxies');
+        $configuration->setAutoGenerateProxyClasses(true);
         $configuration->setMetadataDriverImpl(new StaticPHPDriver([__DIR__]));
         $this->entityManager = EntityManager::create(['driver' => 'pdo_sqlite', 'memory' => true], $configuration);
         (new SchemaTool($this->entityManager))->createSchema([

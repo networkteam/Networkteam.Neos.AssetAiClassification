@@ -37,7 +37,7 @@ class AssetAiClassificationMigrationTest extends TestCase
         self::assertStringContainsString('REFERENCES neos_media_domain_model_asset (persistence_object_identifier) ON DELETE CASCADE', $queries[1]->getStatement());
     }
 
-    public function assetIdentifierEncodings(): array
+    public static function assetIdentifierEncodings(): array
     {
         return [
             'MySQL 5.7 legacy' => ['utf8', 'utf8_unicode_ci', new MySQL57Platform()],
